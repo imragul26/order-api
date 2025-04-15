@@ -16,5 +16,24 @@ paths:
       operationId: post-order
       x-stoplight:
         id: pof8vqbpf9adl
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-order
+      x-stoplight:
+        id: k1ijh8vobymkj
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: x-request-id
+        - schema:
+            type: string
+          in: query
+          name: id
+          description: orderid
 components:
   schemas: {}
