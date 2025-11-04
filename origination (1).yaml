@@ -1,0 +1,1669 @@
+openapi: 3.1.0
+info:
+  title: Origination
+  version: '1.3'
+  summary: A service for AUSIEX customers to manage their relationship and clients
+  contact:
+    name: Technical Support
+    url: www.ausiex.com.au
+    email: support@ausiex.com.au
+  termsOfService: www.ausiex.com.au
+  license:
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+    name: Apache v2.0
+  description: Used by AUSIEX customers to manage their relationship and clients.
+servers:
+  - url: 'https://api.ausiex.com.au/v1'
+    description: Production
+  - url: 'https://api.cit.ausiex.com.au/v1'
+    description: Client Integration Testing
+paths:
+  /client-applications:
+    parameters:
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    post:
+      summary: Create Client Application
+      operationId: client_application-create
+      description: Create a new Application
+      parameters:
+        - $ref: ../models/components.yaml#/components/parameters/requestId_header
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/responses/ApplicationSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                type:
+                  type: string
+                description:
+                  type: string
+                x-tags:
+                  type: array
+                  items:
+                    type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    id:
+                      type: object
+                      properties:
+                        $ref:
+                          type: string
+                    status:
+                      type: object
+                      properties:
+                        $ref:
+                          type: string
+                    customerReferenceNumber:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        maxLength:
+                          type: integer
+                        description:
+                          type: string
+                    applicant:
+                      type: object
+                      properties:
+                        oneOf:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              $ref:
+                                type: string
+                        discriminator:
+                          type: object
+                          properties:
+                            propertyName:
+                              type: string
+                            mapping:
+                              type: object
+                              properties:
+                                individual:
+                                  type: string
+                                joint:
+                                  type: string
+                                business:
+                                  type: string
+                                trust:
+                                  type: string
+                    tradingProduct:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            type:
+                              type: object
+                              properties:
+                                $ref:
+                                  type: string
+                            canTradeWarrants:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                            contractNote:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                required:
+                                  type: array
+                                  items:
+                                    type: string
+                                properties:
+                                  type: object
+                                  properties:
+                                    type:
+                                      type: object
+                                      properties:
+                                        enum:
+                                          type: array
+                                          items:
+                                            type: string
+                                        description:
+                                          type: string
+                                    generationType:
+                                      type: object
+                                      properties:
+                                        enum:
+                                          type: array
+                                          items:
+                                            type: string
+                                        description:
+                                          type: string
+                                    postalAddress:
+                                      type: object
+                                      properties:
+                                        $ref:
+                                          type: string
+                                        description:
+                                          type: string
+                    settlement:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            details:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                oneOf:
+                                  type: array
+                                  items:
+                                    type: object
+                                    properties:
+                                      type:
+                                        type: string
+                                      items:
+                                        type: object
+                                        properties:
+                                          $ref:
+                                            type: string
+                                      $ref:
+                                        type: string
+                            nettingPolicy:
+                              type: object
+                              properties:
+                                enum:
+                                  type: array
+                                  items:
+                                    type: string
+                                description:
+                                  type: string
+                            holdExcessFunds:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                                x-stoplight:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                            redirectDividends:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                                x-stoplight:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                    adviser:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            code:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                            brokerageCode:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                minLength:
+                                  type: integer
+                                maxLength:
+                                  type: integer
+                                description:
+                                  type: string
+                    termsAndConditions:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            accepted:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                            methodOfAcceptance:
+                              type: object
+                              properties:
+                                enum:
+                                  type: array
+                                  items:
+                                    type: string
+                                description:
+                                  type: string
+                            digitalSignatureProvider:
+                              type: object
+                              properties:
+                                enum:
+                                  type: array
+                                  items:
+                                    type: string
+                                description:
+                                  type: string
+                            timestamp:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                format:
+                                  type: string
+                                description:
+                                  type: string
+                            investorIp:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                    holdingsTransfer:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            transferRequested:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                            transferDetails:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                                required:
+                                  type: array
+                                  items:
+                                    type: string
+                                properties:
+                                  type: object
+                                  properties:
+                                    hin:
+                                      type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                        description:
+                                          type: string
+                                    pid:
+                                      type: object
+                                      properties:
+                                        type:
+                                          type: string
+                                        minLength:
+                                          type: integer
+                                        maxLength:
+                                          type: integer
+                                        pattern:
+                                          type: string
+                                        example:
+                                          type: string
+                                        description:
+                                          type: string
+              x-examples:
+                Example 1:
+                  title: Application
+                  type: object
+                  description: The details of an application for a new client
+                  x-tags:
+                    - Models
+                  required:
+                    - applicant
+                    - tradingProduct
+                    - settlement
+                    - termsAndConditions
+                  properties:
+                    id:
+                      $ref: ../attributes/ApplicationId.json
+                    status:
+                      $ref: ../attributes/ApplicationStatus.json
+                    customerReferenceNumber:
+                      type: string
+                      maxLength: 15
+                      description: A reference number that identifies this Application within the Customer's system
+                    applicant:
+                      oneOf:
+                        - $ref: ./Individual.json
+                        - $ref: ./Joint.json
+                        - $ref: ./Business.json
+                        - $ref: ./Trust.json
+                      discriminator:
+                        propertyName: entityType
+                        mapping:
+                          individual: '#/components/schemas/Individual'
+                          joint: '#/components/schemas/Joint'
+                          business: '#/components/schemas/Business'
+                          trust: '#/components/schemas/Trust'
+                    tradingProduct:
+                      type: object
+                      required:
+                        - type
+                        - canTradeWarrants
+                        - contractNote
+                      properties:
+                        type:
+                          $ref: ../attributes/TradingProductType.json
+                        canTradeWarrants:
+                          type: boolean
+                        contractNote:
+                          type: object
+                          required:
+                            - type
+                            - generationType
+                          properties:
+                            type:
+                              enum:
+                                - digital
+                                - physical
+                              description: The channel used to send the contract note to a client
+                            generationType:
+                              enum:
+                                - day
+                                - fill
+                              description: Indicates whether a Contract Note is generated per Order (`fill`) or at EOD (`day`)
+                            postalAddress:
+                              $ref: ../elements/Address.json
+                              description: |-
+                                The postal address that will be used to send any correspondence. 
+
+                                 **Note:**  Punctuation should not be included in address fields.
+
+                                 if `contractNote.type` is `physical` then this field is required.
+                    settlement:
+                      type: object
+                      required:
+                        - nettingPolicy
+                        - holdExcessFunds
+                        - redirectDividends
+                      properties:
+                        details:
+                          type: object
+                          oneOf:
+                            - type: array
+                              items:
+                                $ref: ./DirectEntryAccount.json
+                            - $ref: ./CashManagementAccount.json
+                        nettingPolicy:
+                          enum:
+                            - net
+                            - line-by-line
+                          description: Determines whether we process settlements against the nominated account as line by line (T2T) or as a net amount
+                        holdExcessFunds:
+                          type: boolean
+                          description: Used to determine whether funds are held by AUSIEX or distributed as available.
+                          x-stoplight:
+                            id: eqni8enoxvkrp
+                        redirectDividends:
+                          type: boolean
+                          description: Indicates if the nominated settlement account should be shared with the clearer to support electronic payment of dividends.
+                          x-stoplight:
+                            id: xrflpq3e4g8wo
+                    adviser:
+                      type: object
+                      required:
+                        - code
+                      properties:
+                        code:
+                          type: string
+                        brokerageCode:
+                          type: string
+                          minLength: 3
+                          maxLength: 3
+                          description: 'A 3-character code representing the brokerage.  If this field is not supplied, the default for your firm will be used.'
+                    termsAndConditions:
+                      type: object
+                      description: The details of the applicant accepting the terms and conditions
+                      required:
+                        - accepted
+                        - methodOfAcceptance
+                        - timestamp
+                        - investorIp
+                      properties:
+                        accepted:
+                          type: boolean
+                          description: An positive indicator that the terms and conditions have been accepted.
+                        methodOfAcceptance:
+                          enum:
+                            - electronic-signature
+                            - wet-signature
+                            - electronic-acceptance
+                            - delegate
+                          description: "Captures the method that was used by the client to accept the terms and conditions.\n\nValues | Description |\r\n|------|------|\r\n| electronic-signature | Acceptance was captured using an electronic signature platform (i.e., DocuSign). |\r\n| wet-signature | Acceptance was provided via a physical, handwritten signature on paper. |\r\n|  electronic-acceptance | Acceptance was given through a digital interface, such as clicking a checkbox or button online. |\r\n|  delegate | Acceptance was confirmed by a third party (i.e., a financial institution like Westpac) acting on behalf of the individual or entity, ensuring that the terms and conditions were accepted."
+                        digitalSignatureProvider:
+                          enum:
+                            - docusign
+                            - annature
+                          description: |-
+                            Captures which electronic signature provider was utilised to capture the acceptance of the terms and conditions.
+
+                            If `methodOfAcceptance` is `electronic-signature` then this field is required.
+
+                            This field will also impact the number of documents that wil be required to be uploaded with the application as outlined below:
+                            - `docusign`: Two documents will need to be uploaded, one which is the electronically signed application and the second is the signing certificate provided by DocuSign.
+                            - `annature`: One document will need to be uploaded containing both the electronically signed application and the signing certificate.
+                        timestamp:
+                          type: string
+                          format: date-time
+                          description: The timestamp of when the client accepted the terms and conditions. This should be captured in ISO 8601 format.
+                        investorIp:
+                          type: string
+                          description: The IP address from which the investor accessed the platform or submitted their application. Used for audit logging and compliance tracking.
+                    holdingsTransfer:
+                      type: object
+                      description: Details related to a Holdings Transfer request as part of the application.
+                      required:
+                        - transferRequested
+                      properties:
+                        transferRequested:
+                          type: boolean
+                          description: 'Indicates whether the application is for a Holdings Transfer. If set to false, it will be considered a HIN request.'
+                        transferDetails:
+                          type: object
+                          description: Details of an existing HIN to transfer to AUSIEX as part of the application. If this isn't supplied a new HIN will be created for this applicant.
+                          required:
+                            - hin
+                            - pid
+                          properties:
+                            hin:
+                              type: string
+                              description: The ID of the account for the existing holding.
+                            pid:
+                              type: string
+                              minLength: 5
+                              maxLength: 5
+                              pattern: '^[0-9]{5}'
+                              example: '06382'
+                              description: 'The participant ID for the sponsor of the HIN. This is a 5-digit, zero-padded number.'
+            examples:
+              'E: Individual P: Equity S: CMA':
+                value:
+                  customerReferenceNumber: ebf26e85-9a7e
+                  applicant:
+                    entityType: Individual
+                    person:
+                      firstName: Denise
+                      title: dr
+                      middleName: David De
+                      lastName: Ramirez
+                      residentialAddress:
+                        postalCode: '2956'
+                        city: Steelebury
+                        streetAddress: 53842 Street Rd
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                      postalAddress:
+                        postalCode: '4990'
+                        city: Lake Anthony
+                        streetAddress: 3886 Road St
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                      emailAddresses:
+                        - type: home
+                          value: miguelmendoza@anderson.com
+                          isPreferred: true
+                      phoneNumbers:
+                        - isPreferred: true
+                          type: mobile
+                          value: '+447911123456'
+                      dateOfBirth: '1968-08-28'
+                      gender: female
+                      nationalities:
+                        - country: AU
+                          type: citizen
+                    employment:
+                      category: Managers
+                      type: 'Chief Executives, General Managers and Legislators'
+                    taxDetails:
+                      - country: AU
+                        isSupplied: true
+                        taxIdentificationNumber: '222222222'
+                    marketingOptedOut: false
+                    sourceOfWealth: inheritance
+                    sourceOfFund: bonus
+                    identityVerification:
+                      status: verified
+                      completionTimestamp: '2019-08-24T14:15:22Z'
+                      agentName: Deborah Le
+                    screeningResults:
+                      status: verified
+                      completionTimestamp: '2019-08-24T14:15:22Z'
+                      agentName: Charles Thomas
+                  tradingProduct:
+                    canTradeWarrants: true
+                    type: domestic-equities
+                    contractNote:
+                      generationType: day
+                      type: physical
+                      postalAddress:
+                        postalCode: '2264'
+                        city: Lake Macquarie
+                        streetAddress: 3886 Lake Rd
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                  settlement:
+                    nettingPolicy: net
+                    holdExcessFunds: true
+                    redirectDividends: false
+                    details:
+                      institution:
+                        code: wbc
+                      accountNumber: '123456'
+                      accountName: James Smith
+                      branchCode: '012002'
+                      entityType: Cash_Management_Account
+                  adviser:
+                    code: uatsentadv152
+                    brokerageCode: AAB
+                  termsAndConditions:
+                    investorIp: 172.16.0.12
+                    accepted: true
+                    methodOfAcceptance: electronic-signature
+                    digitalSignatureProvider: docusign
+                    timestamp: '2019-08-24T14:15:22Z'
+                  holdingsTransfer:
+                    transferRequested: false
+      x-stoplight:
+        id: clod878poen3w
+      security:
+        - production:
+            - 'create:client_applications'
+          cit:
+            - 'create:client_applications'
+          uat:
+            - 'create:client_applications'
+          tst:
+            - 'create:client_applications'
+          dev:
+            - 'create:client_applications'
+      tags:
+        - Client Applications
+    get:
+      summary: Get Client Applications
+      operationId: client_applications-get
+      description: Retrieve a list of Clent Applications that match the supplied criteria.
+      parameters:
+        - $ref: '#/components/parameters/applicationStatus_query'
+      responses:
+        '200':
+          description: Retrieve a list of Client Applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: ../models/Application.json
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      x-stoplight:
+        id: 87icjvyf5fadl
+      security:
+        - production:
+            - 'read:client_applications'
+          cit:
+            - 'read:client_applications'
+          uat:
+            - 'read:client_applications'
+          tst:
+            - 'read:client_applications'
+          dev:
+            - 'read:client_applications'
+      tags:
+        - Client Applications
+  '/client-applications/{id}':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    get:
+      summary: Get a Client Application
+      operationId: client_application-get
+      description: Get the information for a specific Client Application
+      parameters: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      x-stoplight:
+        id: ijavlra2y79ze
+      security:
+        - production:
+            - 'read:client_applications'
+          cit:
+            - 'read:client_applications'
+          uat:
+            - 'read:client_applications'
+          tst:
+            - 'read:client_applications'
+          dev:
+            - 'read:client_applications'
+      tags:
+        - Client Applications
+    put:
+      summary: Update a Client Application
+      operationId: application-update
+      description: Update the specified Application with the supplied details
+      parameters:
+        - $ref: ../models/components.yaml#/components/parameters/requestId_header
+      responses:
+        '200':
+          description: Success
+          $ref: '#/components/responses/ApplicationSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: ../models/Application.json
+      x-stoplight:
+        id: d0kc9s4rrt9bt
+      security:
+        - production:
+            - 'update:client_applications'
+          cit:
+            - 'update:client_applications'
+          uat:
+            - 'update:client_applications'
+          tst:
+            - 'update:client_applications'
+          dev:
+            - 'update:client_applications'
+      tags:
+        - Client Applications
+  '/client-applications/{id}/submit':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    post:
+      summary: Submit Client Application
+      operationId: client_application-submit
+      description: Submit a the specified Application for processing
+      parameters: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      x-stoplight:
+        id: hta96y5bmx57k
+      security:
+        - production:
+            - 'submit:client_applications'
+          cit:
+            - 'submit:client_applications'
+          uat:
+            - 'submit:client_applications'
+          tst:
+            - 'submit:client_applications'
+          dev:
+            - 'submit:client_applications'
+      tags:
+        - Client Applications
+  '/client-applications/{id}/cancel':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    post:
+      summary: Cancel Client Application
+      operationId: client_application-cancel
+      description: Request the specified Application to be marked as cancelled.
+      parameters: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      x-stoplight:
+        id: xd77315ftn99x
+      security:
+        - production:
+            - 'cancel:client_applications'
+          cit:
+            - 'cancel:client_applications'
+          uat:
+            - 'cancel:client_applications'
+          tst:
+            - 'cancel:client_applications'
+          dev:
+            - 'cancel:client_applications'
+      tags:
+        - Client Applications
+  '/client-applications/{id}/validate':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    post:
+      summary: Validate Client Application
+      operationId: client_application-validate
+      description: Requests validation of the specified Application.
+      parameters: []
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      x-stoplight:
+        id: 529u9lv84ai1f
+      security:
+        - production:
+            - 'submit:client_applications'
+          cit:
+            - 'submit:client_applications'
+          uat:
+            - 'submit:client_applications'
+          tst:
+            - 'submit:client_applications'
+          dev:
+            - 'submit:client_applications'
+      tags:
+        - Client Applications
+  '/client-applications/{id}/documents':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    post:
+      summary: Upload Document for a Client Application
+      description: Upload a document and associate it with the specified Application.
+      operationId: document-create
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to be uploaded. Maximum allowed file size is 5MB
+                documentType:
+                  $ref: ../attributes/DocumentTypes.json
+              required:
+                - file
+                - documentType
+      responses:
+        '200':
+          description: Document successfully uploaded.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'create:client_applications-documents'
+          cit:
+            - 'create:client_applications-documents'
+          uat:
+            - 'create:client_applications-documents'
+          tst:
+            - 'create:client_applications-documents'
+          dev:
+            - 'create:client_applications-documents'
+      tags:
+        - Documents
+  '/client-applications/{id}/sign-link':
+    parameters:
+      - $ref: '#/components/parameters/applicationId_path'
+      - $ref: ../models/components.yaml#/components/parameters/authorization_header
+    get:
+      summary: Generate Sign Link
+      operationId: client_application_sign_link-get
+      description: Returns a sign-in link to be provided to each specified party that must accept the AUSIEX terms and conditions.
+      responses:
+        '200':
+          description: Obtain URLs for signatories to provide online attestations.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - attestationLinks
+                properties:
+                  attestationLinks:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - email
+                        - url
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                        url:
+                          type: string
+                          format: uri
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'create:client_applications-attestation-sign_links'
+          cit:
+            - 'create:client_applications-attestation-sign_links'
+          uat:
+            - 'create:client_applications-attestation-sign_links'
+          tst:
+            - 'create:client_applications-attestation-sign_links'
+          dev:
+            - 'create:client_applications-attestation-sign_links'
+      tags:
+        - Attestations
+      x-stoplight:
+        id: eit3loykzwmfc
+components:
+  securitySchemes:
+    production:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.ausiex.com.au/oauth2/token'
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          refreshUrl: ''
+    cit:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.cit.ausiex.com.au/oauth2/token'
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          refreshUrl: ''
+    uat:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.cit.ausiex.com.au/oauth2/token'
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          refreshUrl: ''
+    tst:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.tst.ausiex.com.au/oauth2/token'
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          refreshUrl: ''
+    dev:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'https://auth.dev.ausiex.com.au/oauth2/token'
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          refreshUrl: ''
+  parameters:
+    applicationId_path:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The ID of the Client Application resource
+    applicationStatus_query:
+      name: application-status
+      in: query
+      required: false
+      schema:
+        type: string
+        enum:
+          - draft
+          - submitted
+          - cancelled
+      description: The status of an application
+  responses:
+    ApplicationSummary:
+      content:
+        application/json:
+          schema:
+            $ref: ../models/ApplicationSummary.json
+          examples:
+            Invalid Field Value:
+              value:
+                id: 3a446a7d-0ab8-4580-9d99-731631bb4791
+                applicationStatus: draft
+                validationStatus: invalid
+                errors:
+                  - errorCode: ERR_005
+                    errorDescription: Length of the field doesn't meet the requirements.
+                    attributeType: field
+                    attributeName: applicant.person.middleName
+            Valid Applicaiton:
+              value:
+                id: fe18a6be-05b5-4623-a038-d83d8062e89f
+                applicationStatus: draft
+                validationStatus: valid
+                errors: []
+      description: A response containing the summary of the specified Application.
+    ApplicationDetail:
+      content:
+        application/json:
+          schema:
+            $ref: ../models/ApplicationDetail.json
+      description: A response containing the all the details of the specified Application.
+    BadRequest:
+      description: The supplied request doesn't meet the requirements of the endpoint. Please see the response body for detailed information on the issues.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: ../elements/ErrorDetails.json
+    BadGateway:
+      description: 'There was an issue between the Gateway and the backend gateway, please try again later.'
+      content: {}
+    Unauthenticated:
+      description: You have supplied invalid or expired authentication information
+      content: {}
+    Unauthorised:
+      description: You have valid credentials but are not authorised to make this request.
+      content: {}
+    InternalError:
+      description: An internal server error has occured.
+      content: {}
+    NotFound:
+      description: A resource with the supplied ID was not found.
+      content: {}
+    AttestationCreated:
+      description: The response returned when an attestation successfully registered.
+      content:
+        application/json:
+          schema:
+            properties:
+              attestationId:
+                type: string
+            required:
+              - attestationId
+  schemas:
+    Application:
+      type: object
+      properties:
+        title:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        x-tags:
+          type: array
+          items:
+            type: string
+        required:
+          type: array
+          items:
+            type: string
+        properties:
+          type: object
+          properties:
+            id:
+              type: object
+              properties:
+                $ref:
+                  type: string
+            status:
+              type: object
+              properties:
+                $ref:
+                  type: string
+            customerReferenceNumber:
+              type: object
+              properties:
+                type:
+                  type: string
+                maxLength:
+                  type: integer
+                description:
+                  type: string
+            applicant:
+              type: object
+              properties:
+                oneOf:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      $ref:
+                        type: string
+                discriminator:
+                  type: object
+                  properties:
+                    propertyName:
+                      type: string
+                    mapping:
+                      type: object
+                      properties:
+                        individual:
+                          type: string
+                        joint:
+                          type: string
+                        business:
+                          type: string
+                        trust:
+                          type: string
+            tradingProduct:
+              type: object
+              properties:
+                type:
+                  type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    type:
+                      type: object
+                      properties:
+                        $ref:
+                          type: string
+                    canTradeWarrants:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                    contractNote:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            type:
+                              type: object
+                              properties:
+                                enum:
+                                  type: array
+                                  items:
+                                    type: string
+                                description:
+                                  type: string
+                            generationType:
+                              type: object
+                              properties:
+                                enum:
+                                  type: array
+                                  items:
+                                    type: string
+                                description:
+                                  type: string
+                            postalAddress:
+                              type: object
+                              properties:
+                                $ref:
+                                  type: string
+                                description:
+                                  type: string
+            settlement:
+              type: object
+              properties:
+                type:
+                  type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    details:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        oneOf:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                              items:
+                                type: object
+                                properties:
+                                  $ref:
+                                    type: string
+                              $ref:
+                                type: string
+                    nettingPolicy:
+                      type: object
+                      properties:
+                        enum:
+                          type: array
+                          items:
+                            type: string
+                        description:
+                          type: string
+                    holdExcessFunds:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                        x-stoplight:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+                    redirectDividends:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                        x-stoplight:
+                          type: object
+                          properties:
+                            id:
+                              type: string
+            adviser:
+              type: object
+              properties:
+                type:
+                  type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    code:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                    brokerageCode:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        minLength:
+                          type: integer
+                        maxLength:
+                          type: integer
+                        description:
+                          type: string
+            termsAndConditions:
+              type: object
+              properties:
+                type:
+                  type: string
+                description:
+                  type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    accepted:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                    methodOfAcceptance:
+                      type: object
+                      properties:
+                        enum:
+                          type: array
+                          items:
+                            type: string
+                        description:
+                          type: string
+                    digitalSignatureProvider:
+                      type: object
+                      properties:
+                        enum:
+                          type: array
+                          items:
+                            type: string
+                        description:
+                          type: string
+                    timestamp:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        format:
+                          type: string
+                        description:
+                          type: string
+                    investorIp:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+            holdingsTransfer:
+              type: object
+              properties:
+                type:
+                  type: string
+                description:
+                  type: string
+                required:
+                  type: array
+                  items:
+                    type: string
+                properties:
+                  type: object
+                  properties:
+                    transferRequested:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                    transferDetails:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        description:
+                          type: string
+                        required:
+                          type: array
+                          items:
+                            type: string
+                        properties:
+                          type: object
+                          properties:
+                            hin:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                description:
+                                  type: string
+                            pid:
+                              type: object
+                              properties:
+                                type:
+                                  type: string
+                                minLength:
+                                  type: integer
+                                maxLength:
+                                  type: integer
+                                pattern:
+                                  type: string
+                                example:
+                                  type: string
+                                description:
+                                  type: string
+      x-examples:
+        Example 1:
+          title: Application
+          type: object
+          description: The details of an application for a new client
+          x-tags:
+            - Models
+          required:
+            - applicant
+            - tradingProduct
+            - settlement
+            - termsAndConditions
+          properties:
+            id:
+              $ref: ../attributes/ApplicationId.json
+            status:
+              $ref: ../attributes/ApplicationStatus.json
+            customerReferenceNumber:
+              type: string
+              maxLength: 15
+              description: A reference number that identifies this Application within the Customer's system
+            applicant:
+              oneOf:
+                - $ref: ./Individual.json
+                - $ref: ./Joint.json
+                - $ref: ./Business.json
+                - $ref: ./Trust.json
+              discriminator:
+                propertyName: entityType
+                mapping:
+                  individual: '#/components/schemas/Individual'
+                  joint: '#/components/schemas/Joint'
+                  business: '#/components/schemas/Business'
+                  trust: '#/components/schemas/Trust'
+            tradingProduct:
+              type: object
+              required:
+                - type
+                - canTradeWarrants
+                - contractNote
+              properties:
+                type:
+                  $ref: ../attributes/TradingProductType.json
+                canTradeWarrants:
+                  type: boolean
+                contractNote:
+                  type: object
+                  required:
+                    - type
+                    - generationType
+                  properties:
+                    type:
+                      enum:
+                        - digital
+                        - physical
+                      description: The channel used to send the contract note to a client
+                    generationType:
+                      enum:
+                        - day
+                        - fill
+                      description: Indicates whether a Contract Note is generated per Order (`fill`) or at EOD (`day`)
+                    postalAddress:
+                      $ref: ../elements/Address.json
+                      description: |-
+                        The postal address that will be used to send any correspondence. 
+
+                         **Note:**  Punctuation should not be included in address fields.
+
+                         if `contractNote.type` is `physical` then this field is required.
+            settlement:
+              type: object
+              required:
+                - nettingPolicy
+                - holdExcessFunds
+                - redirectDividends
+              properties:
+                details:
+                  type: object
+                  oneOf:
+                    - type: array
+                      items:
+                        $ref: ./DirectEntryAccount.json
+                    - $ref: ./CashManagementAccount.json
+                nettingPolicy:
+                  enum:
+                    - net
+                    - line-by-line
+                  description: Determines whether we process settlements against the nominated account as line by line (T2T) or as a net amount
+                holdExcessFunds:
+                  type: boolean
+                  description: Used to determine whether funds are held by AUSIEX or distributed as available.
+                  x-stoplight:
+                    id: eqni8enoxvkrp
+                redirectDividends:
+                  type: boolean
+                  description: Indicates if the nominated settlement account should be shared with the clearer to support electronic payment of dividends.
+                  x-stoplight:
+                    id: xrflpq3e4g8wo
+            adviser:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+                brokerageCode:
+                  type: string
+                  minLength: 3
+                  maxLength: 3
+                  description: 'A 3-character code representing the brokerage.  If this field is not supplied, the default for your firm will be used.'
+            termsAndConditions:
+              type: object
+              description: The details of the applicant accepting the terms and conditions
+              required:
+                - accepted
+                - methodOfAcceptance
+                - timestamp
+                - investorIp
+              properties:
+                accepted:
+                  type: boolean
+                  description: An positive indicator that the terms and conditions have been accepted.
+                methodOfAcceptance:
+                  enum:
+                    - electronic-signature
+                    - wet-signature
+                    - electronic-acceptance
+                    - delegate
+                  description: "Captures the method that was used by the client to accept the terms and conditions.\n\nValues | Description |\r\n|------|------|\r\n| electronic-signature | Acceptance was captured using an electronic signature platform (i.e., DocuSign). |\r\n| wet-signature | Acceptance was provided via a physical, handwritten signature on paper. |\r\n|  electronic-acceptance | Acceptance was given through a digital interface, such as clicking a checkbox or button online. |\r\n|  delegate | Acceptance was confirmed by a third party (i.e., a financial institution like Westpac) acting on behalf of the individual or entity, ensuring that the terms and conditions were accepted."
+                digitalSignatureProvider:
+                  enum:
+                    - docusign
+                    - annature
+                  description: |-
+                    Captures which electronic signature provider was utilised to capture the acceptance of the terms and conditions.
+
+                    If `methodOfAcceptance` is `electronic-signature` then this field is required.
+
+                    This field will also impact the number of documents that wil be required to be uploaded with the application as outlined below:
+                    - `docusign`: Two documents will need to be uploaded, one which is the electronically signed application and the second is the signing certificate provided by DocuSign.
+                    - `annature`: One document will need to be uploaded containing both the electronically signed application and the signing certificate.
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: The timestamp of when the client accepted the terms and conditions. This should be captured in ISO 8601 format.
+                investorIp:
+                  type: string
+                  description: The IP address from which the investor accessed the platform or submitted their application. Used for audit logging and compliance tracking.
+            holdingsTransfer:
+              type: object
+              description: Details related to a Holdings Transfer request as part of the application.
+              required:
+                - transferRequested
+              properties:
+                transferRequested:
+                  type: boolean
+                  description: 'Indicates whether the application is for a Holdings Transfer. If set to false, it will be considered a HIN request.'
+                transferDetails:
+                  type: object
+                  description: Details of an existing HIN to transfer to AUSIEX as part of the application. If this isn't supplied a new HIN will be created for this applicant.
+                  required:
+                    - hin
+                    - pid
+                  properties:
+                    hin:
+                      type: string
+                      description: The ID of the account for the existing holding.
+                    pid:
+                      type: string
+                      minLength: 5
+                      maxLength: 5
+                      pattern: '^[0-9]{5}'
+                      example: '06382'
+                      description: 'The participant ID for the sponsor of the HIN. This is a 5-digit, zero-padded number.'
+tags:
+  - name: Attestations
+    description: Operations on Attestations
+  - name: Client Applications
+    description: Operations on Client Applications
+  - name: Documents
+    description: Documents related to an application
