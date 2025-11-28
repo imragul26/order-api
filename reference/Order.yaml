@@ -1,20 +1,2123 @@
 openapi: 3.1.0
-x-stoplight:
-  id: fkq76t8k8lmz3
 info:
-  title: Order
-  version: '1.0'
+  version: '1.3'
+  title: Origination
+  summary: A service for AUSIEX customers to manage their relationship and clients
+  description: Used by AUSIEX customers to manage their relationship and clients.
+  termsOfService: www.ausiex.com.au
+  contact:
+    name: Technical Support
+    url: www.ausiex.com.au
+    email: support@ausiex.com.au
+  license:
+    url: 'https://www.apache.org/licenses/LICENSE-2.0'
+    name: Apache v2.0
 servers:
-  - url: 'http://localhost:3000'
+  - url: 'https://api.ausiex.com.au/v1'
+    description: Production
+  - url: 'https://api.cit.ausiex.com.au/v1'
+    description: Client Integration Testing
 paths:
-  /order:
+  /client-applications:
     post:
-      summary: Create Order
       tags:
-        - v1
-      responses: {}
-      operationId: post-order
-      x-stoplight:
-        id: pof8vqbpf9adl
+        - Client Applications
+      summary: Create Client Application
+      description: Create a new Application
+      operationId: client_application-create
+      parameters:
+        - $ref: '#/components/parameters/requestId_header'
+        - $ref: '#/components/parameters/authorization_header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+            examples:
+              'E: Individual P: Equity S: CMA':
+                value:
+                  customerReferenceNumber: ebf26e85-9a7e
+                  applicant:
+                    entityType: Individual
+                    person:
+                      firstName: Denise
+                      title: dr
+                      middleName: David De
+                      lastName: Ramirez
+                      residentialAddress:
+                        postalCode: '2956'
+                        city: Steelebury
+                        streetAddress: 53842 Street Rd
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                      postalAddress:
+                        postalCode: '4990'
+                        city: Lake Anthony
+                        streetAddress: 3886 Road St
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                      emailAddresses:
+                        - type: home
+                          value: miguelmendoza@anderson.com
+                          isPreferred: true
+                      phoneNumbers:
+                        - isPreferred: true
+                          type: mobile
+                          value: '+447911123456'
+                      dateOfBirth: '1968-08-28'
+                      gender: female
+                      nationalities:
+                        - country: AU
+                          type: citizen
+                    employment:
+                      category: Managers
+                      type: 'Chief Executives, General Managers and Legislators'
+                    taxDetails:
+                      - country: AU
+                        isSupplied: true
+                        taxIdentificationNumber: '222222222'
+                    marketingOptedOut: false
+                    sourceOfWealth: inheritance
+                    sourceOfFund: bonus
+                    identityVerification:
+                      status: verified
+                      completionTimestamp: '2019-08-24T14:15:22Z'
+                      agentName: Deborah Le
+                    screeningResults:
+                      status: verified
+                      completionTimestamp: '2019-08-24T14:15:22Z'
+                      agentName: Charles Thomas
+                  tradingProduct:
+                    canTradeWarrants: true
+                    type: domestic-equities
+                    contractNote:
+                      generationType: day
+                      type: physical
+                      postalAddress:
+                        postalCode: '2264'
+                        city: Lake Macquarie
+                        streetAddress: 3886 Lake Rd
+                        region:
+                          code: NSW
+                        country:
+                          code: AU
+                  settlement:
+                    nettingPolicy: net
+                    holdExcessFunds: true
+                    redirectDividends: false
+                    details:
+                      institution:
+                        code: wbc
+                      accountNumber: '123456'
+                      accountName: James Smith
+                      branchCode: '012002'
+                      entityType: Cash_Management_Account
+                  adviser:
+                    code: uatsentadv152
+                    brokerageCode: AAB
+                  termsAndConditions:
+                    investorIp: 172.16.0.12
+                    accepted: true
+                    methodOfAcceptance: electronic-signature
+                    digitalSignatureProvider: docusign
+                    timestamp: '2019-08-24T14:15:22Z'
+                  holdingsTransfer:
+                    transferRequested: false
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'create:client_applications'
+          cit:
+            - 'create:client_applications'
+          uat:
+            - 'create:client_applications'
+          tst:
+            - 'create:client_applications'
+          dev:
+            - 'create:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+    get:
+      tags:
+        - Client Applications
+      summary: Get Client Applications
+      description: Retrieve a list of Clent Applications that match the supplied criteria.
+      operationId: client_applications-get
+      parameters:
+        - $ref: '#/components/parameters/applicationStatus_query'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          description: Retrieve a list of Client Applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Application'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'read:client_applications'
+          cit:
+            - 'read:client_applications'
+          uat:
+            - 'read:client_applications'
+          tst:
+            - 'read:client_applications'
+          dev:
+            - 'read:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}':
+    get:
+      tags:
+        - Client Applications
+      summary: Get a Client Application
+      description: Get the information for a specific Client Application
+      operationId: client_application-get
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'read:client_applications'
+          cit:
+            - 'read:client_applications'
+          uat:
+            - 'read:client_applications'
+          tst:
+            - 'read:client_applications'
+          dev:
+            - 'read:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+    put:
+      tags:
+        - Client Applications
+      summary: Update a Client Application
+      description: Update the specified Application with the supplied details
+      operationId: application-update
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/requestId_header'
+        - $ref: '#/components/parameters/authorization_header'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'update:client_applications'
+          cit:
+            - 'update:client_applications'
+          uat:
+            - 'update:client_applications'
+          tst:
+            - 'update:client_applications'
+          dev:
+            - 'update:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}/submit':
+    post:
+      tags:
+        - Client Applications
+      summary: Submit Client Application
+      description: Submit a the specified Application for processing
+      operationId: client_application-submit
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'submit:client_applications'
+          cit:
+            - 'submit:client_applications'
+          uat:
+            - 'submit:client_applications'
+          tst:
+            - 'submit:client_applications'
+          dev:
+            - 'submit:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}/cancel':
+    post:
+      tags:
+        - Client Applications
+      summary: Cancel Client Application
+      description: Request the specified Application to be marked as cancelled.
+      operationId: client_application-cancel
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'cancel:client_applications'
+          cit:
+            - 'cancel:client_applications'
+          uat:
+            - 'cancel:client_applications'
+          tst:
+            - 'cancel:client_applications'
+          dev:
+            - 'cancel:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}/validate':
+    post:
+      tags:
+        - Client Applications
+      summary: Validate Client Application
+      description: Requests validation of the specified Application.
+      operationId: client_application-validate
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          $ref: '#/components/responses/ApplicationSummary'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'submit:client_applications'
+          cit:
+            - 'submit:client_applications'
+          uat:
+            - 'submit:client_applications'
+          tst:
+            - 'submit:client_applications'
+          dev:
+            - 'submit:client_applications'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}/documents':
+    post:
+      tags:
+        - Documents
+      summary: Upload Document for a Client Application
+      description: Upload a document and associate it with the specified Application.
+      operationId: document-create
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  description: The document file to be uploaded. Maximum allowed file size is 5MB
+                  contentMediaType: application/octet-stream
+                documentType:
+                  $ref: '#/components/schemas/Document_Types'
+              required:
+                - file
+                - documentType
+      responses:
+        '200':
+          description: Document successfully uploaded.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'create:client_applications-documents'
+          cit:
+            - 'create:client_applications-documents'
+          uat:
+            - 'create:client_applications-documents'
+          tst:
+            - 'create:client_applications-documents'
+          dev:
+            - 'create:client_applications-documents'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+  '/client-applications/{id}/sign-link':
+    get:
+      tags:
+        - Attestations
+      summary: Generate Sign Link
+      description: Returns a sign-in link to be provided to each specified party that must accept the AUSIEX terms and conditions.
+      operationId: client_application_sign_link-get
+      parameters:
+        - $ref: '#/components/parameters/applicationId_path'
+        - $ref: '#/components/parameters/authorization_header'
+      responses:
+        '200':
+          description: Obtain URLs for signatories to provide online attestations.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attestationLinks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          format: email
+                        url:
+                          type: string
+                          format: uri
+                      required:
+                        - email
+                        - url
+                required:
+                  - attestationLinks
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthenticated'
+        '403':
+          $ref: '#/components/responses/Unauthorised'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '502':
+          $ref: '#/components/responses/BadGateway'
+      security:
+        - production:
+            - 'create:client_applications-attestation-sign_links'
+          cit:
+            - 'create:client_applications-attestation-sign_links'
+          uat:
+            - 'create:client_applications-attestation-sign_links'
+          tst:
+            - 'create:client_applications-attestation-sign_links'
+          dev:
+            - 'create:client_applications-attestation-sign_links'
+      servers:
+        - url: 'https://api.ausiex.com.au/v1'
+          description: Production
+        - url: 'https://api.cit.ausiex.com.au/v1'
+          description: Client Integration Testing
+tags:
+  - name: Attestations
+    description: Operations on Attestations
+  - name: Client Applications
+    description: Operations on Client Applications
+  - name: Documents
+    description: Documents related to an application
 components:
-  schemas: {}
+  parameters:
+    applicationStatus_query:
+      name: application-status
+      in: query
+      description: The status of an application
+      required: false
+      schema:
+        type: string
+        enum:
+          - draft
+          - submitted
+          - cancelled
+    applicationId_path:
+      name: id
+      in: path
+      description: The ID of the Client Application resource
+      required: true
+      schema:
+        type: string
+    requestId_header:
+      name: X-Request-ID
+      in: header
+      description: A unique ID that represents this request. This is used to prevent the processing of non-idempotent requests multiple times. This can be any value that you choose as long as it will remain unique within your user context for a 24hr rolling window
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+    authorization_header:
+      name: Authorization
+      in: header
+      description: Contains the bearer access token for authentication and authorisation
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    production:
+      type: oauth2
+      flows:
+        clientCredentials:
+          refreshUrl: ''
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          tokenUrl: 'https://auth.ausiex.com.au/oauth2/token'
+    cit:
+      type: oauth2
+      flows:
+        clientCredentials:
+          refreshUrl: ''
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          tokenUrl: 'https://auth.cit.ausiex.com.au/oauth2/token'
+    uat:
+      type: oauth2
+      flows:
+        clientCredentials:
+          refreshUrl: ''
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          tokenUrl: 'https://auth.cit.ausiex.com.au/oauth2/token'
+    tst:
+      type: oauth2
+      flows:
+        clientCredentials:
+          refreshUrl: ''
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          tokenUrl: 'https://auth.tst.ausiex.com.au/oauth2/token'
+    dev:
+      type: oauth2
+      flows:
+        clientCredentials:
+          refreshUrl: ''
+          scopes:
+            'read:client_applications': Allow reading Client Application resources
+            'create:client_applications': Allow creation of Client Application resources
+            'update:client_applications': Allow amending Client Application resources
+            'submit:client_applications': Allow submission of Client Applications for processing
+            'cancel:client_applications': Allow cancellation of Client Applications
+            'create:client_applications-documents': Allow creation of Client Application documents
+            'create:client_applications-attestation': Allow write of Client Application Attestations resources
+            'create:client_applications-attestation-sign_links': Create a sign link to capture a Client Application Attestation
+          tokenUrl: 'https://auth.dev.ausiex.com.au/oauth2/token'
+  responses:
+    ApplicationSummary:
+      description: A response containing the summary of the specified Application.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Application_Summary'
+          examples:
+            Invalid Field Value:
+              value:
+                id: 3a446a7d-0ab8-4580-9d99-731631bb4791
+                applicationStatus: draft
+                validationStatus: invalid
+                errors:
+                  - errorCode: ERR_005
+                    errorDescription: Length of the field doesn't meet the requirements.
+                    attributeType: field
+                    attributeName: applicant.person.middleName
+            Valid Applicaiton:
+              value:
+                id: fe18a6be-05b5-4623-a038-d83d8062e89f
+                applicationStatus: draft
+                validationStatus: valid
+                errors: []
+    ApplicationDetail:
+      description: A response containing the all the details of the specified Application.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Application_Full_Details'
+    BadRequest:
+      description: The supplied request doesn't meet the requirements of the endpoint. Please see the response body for detailed information on the issues.
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Error_Details'
+    BadGateway:
+      description: 'There was an issue between the Gateway and the backend gateway, please try again later.'
+    Unauthenticated:
+      description: You have supplied invalid or expired authentication information
+    Unauthorised:
+      description: You have valid credentials but are not authorised to make this request.
+    InternalError:
+      description: An internal server error has occured.
+    NotFound:
+      description: A resource with the supplied ID was not found.
+    AttestationCreated:
+      description: The response returned when an attestation successfully registered.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              attestationId:
+                type: string
+            required:
+              - attestationId
+  schemas:
+    Application:
+      type: object
+      title: Application
+      description: The details of an application for a new client
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplicationId'
+        status:
+          $ref: '#/components/schemas/ApplicationStatus'
+        customerReferenceNumber:
+          type: string
+          description: A reference number that identifies this Application within the Customer's system
+          maxLength: 15
+        applicant:
+          oneOf:
+            - $ref: '#/components/schemas/Individual'
+            - $ref: '#/components/schemas/Joint'
+            - $ref: '#/components/schemas/Business'
+            - $ref: '#/components/schemas/Trust'
+          discriminator:
+            propertyName: entityType
+            mapping:
+              individual: '#/components/schemas/Individual'
+              joint: '#/components/schemas/Joint'
+              business: '#/components/schemas/Business'
+              trust: '#/components/schemas/Trust'
+        tradingProduct:
+          type: object
+          properties:
+            type:
+              $ref: '#/components/schemas/Trading_Product_Type'
+            canTradeWarrants:
+              type: boolean
+            contractNote:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - digital
+                    - physical
+                  description: The channel used to send the contract note to a client
+                generationType:
+                  type: string
+                  enum:
+                    - day
+                    - fill
+                  description: Indicates whether a Contract Note is generated per Order (`fill`) or at EOD (`day`)
+                postalAddress:
+                  $ref: '#/components/schemas/Address'
+                  description: |-
+                    The postal address that will be used to send any correspondence. 
+
+                     **Note:**  Punctuation should not be included in address fields.
+
+                     if `contractNote.type` is `physical` then this field is required.
+              required:
+                - type
+                - generationType
+          required:
+            - type
+            - canTradeWarrants
+            - contractNote
+        settlement:
+          type: object
+          properties:
+            details:
+              oneOf:
+                - $ref: '#/components/schemas/Direct_Entry_Account_Map'
+                - $ref: '#/components/schemas/Cash_Management_Account'
+              discriminator:
+                propertyName: entityType
+                mapping:
+                  direct-entry-account: '#/components/schemas/Direct_Entry_Account_Map'
+                  cash-management-account: '#/components/schemas/Cash_Management_Account'
+            nettingPolicy:
+              type: string
+              enum:
+                - net
+                - line-by-line
+              description: Determines whether we process settlements against the nominated account as line by line (T2T) or as a net amount
+            holdExcessFunds:
+              type: boolean
+              description: Used to determine whether funds are held by AUSIEX or distributed as available.
+            redirectDividends:
+              type: boolean
+              description: Indicates if the nominated settlement account should be shared with the clearer to support electronic payment of dividends.
+          required:
+            - details
+            - nettingPolicy
+            - holdExcessFunds
+            - redirectDividends
+        adviser:
+          type: object
+          properties:
+            code:
+              type: string
+            brokerageCode:
+              type: string
+              description: 'A 3-character code representing the brokerage.  If this field is not supplied, the default for your firm will be used.'
+              minLength: 3
+              maxLength: 3
+          required:
+            - code
+        termsAndConditions:
+          type: object
+          description: The details of the applicant accepting the terms and conditions
+          properties:
+            accepted:
+              type: boolean
+              description: An positive indicator that the terms and conditions have been accepted.
+            methodOfAcceptance:
+              type: string
+              enum:
+                - electronic-signature
+                - wet-signature
+                - electronic-acceptance
+                - delegate
+              description: "Captures the method that was used by the client to accept the terms and conditions.\n\nValues | Description |\r\n|------|------|\r\n| electronic-signature | Acceptance was captured using an electronic signature platform (i.e., DocuSign). |\r\n| wet-signature | Acceptance was provided via a physical, handwritten signature on paper. |\r\n|  electronic-acceptance | Acceptance was given through a digital interface, such as clicking a checkbox or button online. |\r\n|  delegate | Acceptance was confirmed by a third party (i.e., a financial institution like Westpac) acting on behalf of the individual or entity, ensuring that the terms and conditions were accepted."
+            digitalSignatureProvider:
+              type: string
+              enum:
+                - docusign
+                - annature
+              description: |-
+                Captures which electronic signature provider was utilised to capture the acceptance of the terms and conditions.
+
+                If `methodOfAcceptance` is `electronic-signature` then this field is required.
+
+                This field will also impact the number of documents that wil be required to be uploaded with the application as outlined below:
+                - `docusign`: Two documents will need to be uploaded, one which is the electronically signed application and the second is the signing certificate provided by DocuSign.
+                - `annature`: One document will need to be uploaded containing both the electronically signed application and the signing certificate.
+            timestamp:
+              type: string
+              description: The timestamp of when the client accepted the terms and conditions. This should be captured in ISO 8601 format.
+              format: date-time
+            investorIp:
+              type: string
+              description: The IP address from which the investor accessed the platform or submitted their application. Used for audit logging and compliance tracking.
+          required:
+            - accepted
+            - methodOfAcceptance
+            - timestamp
+            - investorIp
+        holdingsTransfer:
+          type: object
+          description: Details related to a Holdings Transfer request as part of the application.
+          properties:
+            transferRequested:
+              type: boolean
+              description: 'Indicates whether the application is for a Holdings Transfer. If set to false, it will be considered a HIN request.'
+            transferDetails:
+              type: object
+              description: Details of an existing HIN to transfer to AUSIEX as part of the application. If this isn't supplied a new HIN will be created for this applicant.
+              properties:
+                hin:
+                  type: string
+                  description: The ID of the account for the existing holding.
+                pid:
+                  type: string
+                  description: 'The participant ID for the sponsor of the HIN. This is a 5-digit, zero-padded number.'
+                  pattern: '^[0-9]{5}'
+                  minLength: 5
+                  maxLength: 5
+                  examples:
+                    - '06382'
+              required:
+                - hin
+                - pid
+          required:
+            - transferRequested
+      required:
+        - applicant
+        - tradingProduct
+        - settlement
+        - termsAndConditions
+      x-tags:
+        - Models
+    ApplicationId:
+      type: string
+      title: ApplicationId
+      description: 'The unique identifier for the application. You can use this to retrieve, submit, cancel or validate the application record.'
+      readOnly: true
+      x-tags:
+        - Attributes
+    ApplicationStatus:
+      type: string
+      enum:
+        - draft
+        - awaiting-attestations
+        - pending-submission
+        - submitted
+        - cancelled
+        - failed
+      title: ApplicationStatus
+      description: |-
+        The status of the application.
+        * `draft`: The application has been saved in our systems but not yet submitted, so you can still be amended.
+      readOnly: true
+      x-tags:
+        - Attributes
+    Individual:
+      type: object
+      title: Individual
+      description: Represents an Individual Legal Entity
+      properties:
+        userName:
+          $ref: '#/components/schemas/User_Name'
+        person:
+          $ref: '#/components/schemas/Person'
+        employment:
+          type: object
+          properties:
+            category:
+              type: string
+              description: 'The category of employment held by this person. Please refer to the [documentation](../docs/7-metadata.md#employment-categories) for the list of valid codes.'
+            type:
+              type: string
+              description: 'The type of employment (within the category) held by this person. Please refer to the [documentation](../docs/7-metadata.md#employment-categories) for the list of valid codes.'
+          required:
+            - category
+            - type
+        taxDetails:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Tax_Details'
+        marketingOptedOut:
+          $ref: '#/components/schemas/Marketing_Opted_Out'
+        identityVerification:
+          $ref: '#/components/schemas/Identity_Verification'
+        screeningResults:
+          $ref: '#/components/schemas/Screening_Results'
+        sourceOfWealth:
+          $ref: '#/components/schemas/Source_of_Wealth'
+        sourceOfFund:
+          $ref: '#/components/schemas/Source_of_Fund'
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: individual
+      required:
+        - employment
+        - taxDetails
+        - marketingOptedOut
+        - identityVerification
+        - screeningResults
+        - sourceOfWealth
+        - sourceOfFund
+        - entityType
+      x-tags:
+        - Models
+    User_Name:
+      type: string
+      title: User Name
+      description: Existing Username of the customer.
+      x-tags:
+        - Attributes
+    Person:
+      type: object
+      title: Person
+      description: Information about a person.
+      properties:
+        title:
+          $ref: '#/components/schemas/Title'
+          x-faker:
+            name.prefix:
+              gender: female
+        firstName:
+          $ref: '#/components/schemas/FirstName'
+          x-faker:
+            name.firstName:
+              gender: female
+        middleName:
+          $ref: '#/components/schemas/MiddleName'
+          x-faker:
+            name.middleName:
+              gender: female
+        lastName:
+          $ref: '#/components/schemas/LastName'
+          x-faker:
+            name.lastName:
+              gender: female
+        otherName:
+          type: string
+          description: Other name the person is known by.
+        fullName:
+          type: string
+          description: 'The full name (first, middle & last) of the person including title.'
+          readOnly: true
+          examples:
+            - Miss Susan Ann Smith
+        displayName:
+          type: string
+          description: 'A shortened version of full name, generally first and last name, that is used for display purposes.'
+          readOnly: true
+          examples:
+            - Susan Smith
+        residentialAddress:
+          $ref: '#/components/schemas/Address'
+          description: |-
+            The residential address. This can not be a PO Box.
+
+            **Note:**  Punctuation should not be included in address fields.
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+          description: |-
+            The postal address that will be used to send any correspondence.
+
+            **Note:**  Punctuation should not be included in address fields.
+        emailAddresses:
+          type: array
+          minItems: 1
+          maxItems: 1
+          items:
+            $ref: '#/components/schemas/Email_Address'
+        phoneNumbers:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Phone_Number'
+        dateOfBirth:
+          type: string
+          format: date
+          x-faker:
+            date.between:
+              from: '1900-01-01T00:00:00.000Z'
+              to: '2007-01-01T00:00:00.000Z'
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+            - other
+        nationalities:
+          type: array
+          description: 'A list of an individual''s legal status as a citizen of a particular nation, often determined by birth or naturalisation'
+          minItems: 1
+          maxItems: 6
+          items:
+            $ref: '#/components/schemas/Nationality'
+      required:
+        - title
+        - firstName
+        - lastName
+        - fullName
+        - displayName
+        - residentialAddress
+        - postalAddress
+        - emailAddresses
+        - phoneNumbers
+        - dateOfBirth
+        - gender
+        - nationalities
+      x-tags:
+        - Models
+    Title:
+      type: string
+      enum:
+        - miss
+        - mr
+        - mrs
+        - dr
+        - ms
+        - master
+      title: Title
+      x-faker:
+        name.prefix:
+          gender: female
+      x-tags:
+        - Attributes
+    FirstName:
+      type: string
+      title: FirstName
+      description: 'The full first/given name of a Person, no abbreviations'
+      minLength: 2
+      x-faker:
+        name.firstName:
+          gender: female
+      x-tags:
+        - Attributes
+    MiddleName:
+      type: string
+      title: MiddleName
+      description: The middle name of the Person that needs to be supplied if the Person has a middle name. The value needs to match the middle name on their identity documents and therefore can't be an initial.
+      minLength: 1
+      x-faker:
+        name.middleName:
+          gender: female
+      x-tags:
+        - Attributes
+    LastName:
+      type: string
+      title: LastName
+      description: 'The full last/surname of a Person, no abbreviations'
+      x-faker:
+        name.lastName:
+          gender: female
+      x-tags:
+        - Attributes
+    Address:
+      type: object
+      title: Address
+      description: |-
+        A physical postal address.
+
+        **Note:**  Punctuation should not be included in address fields.
+      properties:
+        streetAddress:
+          type: string
+          description: The street address
+          examples:
+            - 12 Main Rd
+        city:
+          type: string
+          description: The city the street is within
+          examples:
+            - Sydney
+        region:
+          type: object
+          description: 'The region of the address e.g. the state, province or territory'
+          properties:
+            code:
+              type: string
+              description: The region expressed using ISO3166-2
+              pattern: '^[A-Z]{2,3}'
+              minLength: 2
+              maxLength: 3
+              examples:
+                - NSW
+          required:
+            - code
+        postalCode:
+          type: string
+          description: The postal code of the address
+          examples:
+            - '2000'
+        country:
+          type: object
+          description: The country of the address.
+          properties:
+            code:
+              $ref: '#/components/schemas/Country'
+          required:
+            - code
+      required:
+        - streetAddress
+        - city
+        - region
+        - postalCode
+        - country
+      x-tags:
+        - Elements
+    Country:
+      type: string
+      title: Country
+      description: The country expressed in ISO 3166-1 alpha 2 format
+      pattern: '^[A-Z]{2}'
+      minLength: 2
+      maxLength: 2
+      examples:
+        - AU
+      x-tags:
+        - Attributes
+    Email_Address:
+      type: object
+      title: Email Address
+      description: The details of an email address
+      properties:
+        type:
+          $ref: '#/components/schemas/Email_Types'
+        value:
+          $ref: '#/components/schemas/Email_Value'
+        isPreferred:
+          type: boolean
+          description: Indicates this is the the preferred email address to be contacted on.
+      required:
+        - type
+        - value
+        - isPreferred
+      x-tags:
+        - Elements
+    Email_Types:
+      type: string
+      enum:
+        - home
+        - work
+      title: Email Types
+      description: The valid types of email addresses
+      x-tags:
+        - Attributes
+    Email_Value:
+      type: string
+      title: Email Value
+      description: An email address
+      format: email
+      x-faker:
+        internet.email: {}
+      x-tags:
+        - Attributes
+    Phone_Number:
+      type: object
+      title: Phone Number
+      description: The details of a phone number
+      properties:
+        type:
+          $ref: '#/components/schemas/Phone_Types'
+        value:
+          $ref: '#/components/schemas/Phone_Value'
+        isPreferred:
+          type: boolean
+          description: Indicates this is the the preferred phone number to be contacted on.
+      required:
+        - type
+        - value
+        - isPreferred
+      x-tags:
+        - Elements
+    Phone_Types:
+      type: string
+      enum:
+        - home
+        - work
+        - mobile
+        - fax
+      title: Phone Types
+      description: The valid types of phone numbers
+      x-tags:
+        - Attributes
+    Phone_Value:
+      type: string
+      title: Phone Value
+      description: A phone number expressed using E.164 format
+      examples:
+        - '614112233454'
+      x-tags:
+        - Attributes
+    Nationality:
+      type: object
+      title: Nationality
+      description: Details of the legal status of belonging to a particular nation
+      properties:
+        country:
+          $ref: '#/components/schemas/Country'
+        type:
+          type: string
+          enum:
+            - permanent-resident
+            - citizen
+      required:
+        - country
+        - type
+      x-tags:
+        - Elements
+    Tax_Details:
+      type: object
+      title: Tax Details
+      description: The tax details for this entity
+      properties:
+        country:
+          $ref: '#/components/schemas/Country'
+          description: The country of which this entity is a tax resident
+        isSupplied:
+          type: boolean
+          description: Indicates if a TIN has been supplied by this entity for the specified tax country
+        taxIdentificationNumber:
+          type: string
+          description: |-
+            **Required when `isSupplied` is `true`**
+
+            The tax identification number issued by the authority in the specified `country`.
+
+            Further information can be found [here](https://www.oecd.org/tax/automatic-exchange/crs-implementation-and-assistance/tax-identification-numbers/)
+        nonSupplyReasonCode:
+          type: string
+          enum:
+            - under-age
+            - pensioner
+            - social-benefit
+            - no-return
+            - finance-business
+            - non-resident
+            - norfolk-island
+            - not-supplied
+            - not-required
+            - not-supported
+            - not-issued
+          description: "**Required when `isSupplied` is `false`**\n\n| Value | Description |\r\n|------|------|\r\n| under-age | Applicant is under the age required by the respective regulator for TIN issuance. |\r\n| pensioner | Applicant is on an age/invalid/service pension and not required to provide a TIN. |\r\n| social-benefit | Applicant is on another eligible pension e.g. parenting payment or widow allowance, that doesn’t required providing a TIN. |\r\n| no-return | Applicant is an entity that isn’t required to lodge an income tax return. |\r\n| finance-business | Applicant is in the business of providing consumer or business finance. |\r\n| non-resident | Applicant isn’t a resident of the nominated country so doesn’t have a TIN. |\r\n| norfolk-island | Applicant is a resident of Norfolk Island and therefore not required to supply a TIN. |\r\n| not-supplied | Applicant is not supplying TIN for a reason other than the above. |\r\n| not-required | The applicant’s country of tax residency does not require disclosure of a TIN. |\r\n| not-supported | The applicant’s country of tax residency does not issue TINs. |\r\n| not-issued | The applicant hasn’t been issued a TIN by their country of tax residency.  |"
+      required:
+        - country
+        - isSupplied
+      x-tags:
+        - Elements
+    Marketing_Opted_Out:
+      type: boolean
+      title: Marketing Opted Out
+      description: Indicates whether this person has indicated that they do not wish to receive marketing communications i.e. opted out.
+      x-tags:
+        - Attributes
+    Identity_Verification:
+      type: object
+      title: Identity Verification
+      description: Details of the identity verification that has been performed on an entity
+      properties:
+        status:
+          type: string
+          enum:
+            - verified
+            - failed
+          description: The current status of the identity verification process.
+        completionTimestamp:
+          type: string
+          description: The date and time when the identity verification was completed.
+          format: date-time
+        agentName:
+          type: string
+          description: The name of the person or service provider who performed the identity verification.
+      required:
+        - status
+        - completionTimestamp
+      x-tags:
+        - Elements
+    Screening_Results:
+      type: object
+      title: Screening Results
+      description: Results of screening that has been completed on an entity to support AML obligations
+      properties:
+        status:
+          type: string
+          enum:
+            - verified
+            - failed
+          description: 'Used to provide positive confirmation that the PEP, sanction and other AML/KYC screening has been completed successfully or otherwise that further processing maybe required.'
+        completionTimestamp:
+          type: string
+          description: The timestamp when the screening process was completed.
+          format: date-time
+        agentName:
+          type: string
+          description: The name of the person or tool used to perform the background checks
+      required:
+        - status
+        - completionTimestamp
+      x-tags:
+        - Elements
+    Source_of_Wealth:
+      type: string
+      enum:
+        - inheritance
+        - rental-income
+        - business-profits
+        - redundancy
+        - mergers-and-acquisitions
+        - controlled-money-account
+        - employment-income-earnings
+        - business-income-earnings
+        - investment-income-earnings
+        - corporate-investments-earnings
+        - superannuation-pension
+        - insurance-payment
+        - compensation-payment
+        - government-benefits
+        - owns-real-estate-property
+        - sale-of-assets
+        - liquidation-of-assets
+        - gift-donation
+        - windfall
+        - none
+        - refused-to-answer
+        - additional-sources
+      title: Source of Wealth
+      description: 'Wealth derived from a combination of legitimate income streams, investments, and asset holdings accumulated over time.'
+      x-tags:
+        - Attributes
+    Source_of_Fund:
+      type: string
+      enum:
+        - salary-wages
+        - superannuation-pension
+        - commission
+        - bonus
+        - government-grant
+        - mergers-and-acquisitions
+        - business-income-earnings
+        - business-profits
+        - investment-income-earnings
+        - corporate-investments-earnings
+        - rental-income
+        - loan
+        - ext-investment-capital-injection
+        - insurance-payment
+        - compensation-payment
+        - government-benefits
+        - sale-of-assets
+        - liquidation-of-assets
+        - controlled-money-account
+        - redundancy
+        - inheritance
+        - gift-donation
+        - windfall
+        - tax-refund
+        - additional-sources
+      title: Source of Fund
+      description: 'Specifies origin of the money used in a particular transaction, investment, or account activity.'
+      x-tags:
+        - Attributes
+    Joint:
+      type: object
+      title: Joint
+      description: Represents a joint relationship between two Individuals
+      properties:
+        parties:
+          type: array
+          minItems: 2
+          maxItems: 2
+          items:
+            $ref: '#/components/schemas/Individual'
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: joint
+      required:
+        - entityType
+      x-tags:
+        - Models
+    Business:
+      type: object
+      title: Business
+      description: Represents a Business Legal Entity
+      properties:
+        businessType:
+          type: string
+          enum:
+            - sole-trader
+            - company
+        registeredName:
+          type: string
+          description: 'The full, registered business name of the business.'
+          minLength: 4
+          maxLength: 150
+        industryClassification:
+          $ref: '#/components/schemas/Industry_Classification'
+        establishmentLocation:
+          $ref: '#/components/schemas/Establishment_Location'
+        businessDetails:
+          type: object
+          description: The details for this Business specific to the type of business set in `businessType`.
+          oneOf:
+            - $ref: '#/components/schemas/Company'
+            - $ref: '#/components/schemas/Sole_Trader'
+        identityVerification:
+          $ref: '#/components/schemas/Identity_Verification'
+        screeningResults:
+          $ref: '#/components/schemas/Screening_Results'
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: business
+      required:
+        - businessType
+        - registeredName
+        - industryClassification
+        - establishmentLocation
+        - businessDetails
+        - identityVerification
+        - screeningResults
+        - entityType
+      x-tags:
+        - Models
+    Industry_Classification:
+      type: object
+      title: Industry Classification
+      properties:
+        categoryCode:
+          type: string
+          description: 'The code for the category of industry this entity operates within. Please refer to the [documentation](../docs/7-metadata.md#industry-codes) for the list of valid codes.'
+        typeCode:
+          type: string
+          description: 'The code for the type (within category) of industry this entity operates within. Please refer to the [documentation](../docs/7-metadata.md#industry-codes) for the list of valid codes.'
+      required:
+        - categoryCode
+        - typeCode
+      x-tags:
+        - Elements
+    Establishment_Location:
+      $ref: '#/components/schemas/Country'
+      title: Establishment Location
+      description: The location in which this entity was established
+      x-tags:
+        - Attributes
+    Company:
+      type: object
+      title: Company
+      description: The business details of the company
+      properties:
+        companyType:
+          type: string
+          enum:
+            - proprietary
+            - public
+        abn:
+          $ref: '#/components/schemas/Abn'
+        acn:
+          type: string
+          description: An Australian Company Number is a unique identifier required by every company registered under Australia’s Corporations Act 2001. The ACN is a nine-digit number issued by the Australian Securities & Investments Commission to every Australian company.
+          pattern: '^\d{9}$'
+          minLength: 9
+          maxLength: 9
+        officeHolders:
+          type: array
+          description: 'The details of the directors, company secretaries and beneficial owners for the company'
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/Office_Holder'
+        beneficialOwners:
+          type: array
+          description: "A list of shareholders that own at least 25% of the issued capital of the company either directly or indirectly.\r\n\r\nIf the shareholder is also an office holder their status as a benefiical onwer should be captured on their `officeHolder` record using the `isBeneficialOwner` attribute vs creating a seperate record in this object."
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Individual'
+        taxDetails:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Tax_Details'
+        registeredAddress:
+          $ref: '#/components/schemas/Address'
+          description: |-
+            The registered address of the business. This can not be a PO Box.
+
+            **Note:**  Punctuation should not be included in address fields.
+        principalAddress:
+          $ref: '#/components/schemas/Address'
+          description: |-
+            The address of the prinicipal place of business. This can not be a PO Box.
+
+            **Note:**  Punctuation should not be included in address fields.
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+          description: |-
+            The postal address of the business. The postal address that will be used to send any correspondance.
+
+            **Note:**  Punctuation should not be included in address fields.
+        emailAddress:
+          $ref: '#/components/schemas/Email_Value'
+        phoneNumber:
+          $ref: '#/components/schemas/Phone_Value'
+        charityDetails:
+          $ref: '#/components/schemas/Charity_Detials'
+          description: Supply this object if the Company is a charity.
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: company
+      required:
+        - companyType
+        - acn
+        - officeHolders
+        - taxDetails
+        - registeredAddress
+        - principalAddress
+        - emailAddress
+        - phoneNumber
+        - entityType
+      x-tags:
+        - Models
+    Abn:
+      type: string
+      title: Abn
+      description: The Australian Business Number issued by the Australian Business Register
+      pattern: '^\d{11}$'
+      minLength: 11
+      maxLength: 11
+      x-tags:
+        - Attributes
+    Office_Holder:
+      type: object
+      title: Office Holder
+      allOf:
+        - $ref: '#/components/schemas/Individual'
+        - type: object
+          properties:
+            role:
+              type: string
+              enum:
+                - director
+                - company-secretary
+                - sole-director
+            isBeneficialOwner:
+              type: boolean
+              description: Indicates that the director owns 25% or more of the Company
+            isSignatory:
+              type: boolean
+          required:
+            - role
+            - isBeneficialOwner
+            - isSignatory
+      x-tags:
+        - Models
+    Charity_Detials:
+      type: object
+      title: Charity Detials
+      description: Describes the charity details for a Legal Entity
+      properties:
+        purpose:
+          type: string
+          description: The purpose of the charity
+      x-tags:
+        - Elements
+    Sole_Trader:
+      type: object
+      title: Sole Trader
+      description: The business details specific to a Sole Trader
+      properties:
+        abn:
+          $ref: '#/components/schemas/Abn'
+        owner:
+          $ref: '#/components/schemas/Individual'
+        entityType:
+          const: sole-trader
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+      required:
+        - abn
+        - owner
+        - entityType
+      x-tags:
+        - Models
+    Trust:
+      type: object
+      title: Trust
+      description: Represents a Trust Legal Entity
+      properties:
+        name:
+          type: string
+          description: The name of the trust as per the trust deed.
+          minLength: 4
+          maxLength: 150
+        type:
+          type: string
+          enum:
+            - self-managed-super-fund
+            - family
+            - minor
+            - settlement
+            - charity
+            - super-fund
+            - deceased-estate
+            - discretionary
+            - testamentary
+            - other
+        otherTrustType:
+          type: string
+          description: This is required if the `type` is `other`.
+          maxLength: 50
+        accountDesignation:
+          type: string
+          description: 'This field may not contain the words TRUST, TRUSTEE or ATF to prevent the account from being incorrectly flagged in AUSIEX systems.'
+          maxLength: 75
+        emailAddress:
+          $ref: '#/components/schemas/Email_Value'
+        establishmentLocation:
+          $ref: '#/components/schemas/Establishment_Location'
+        abn:
+          $ref: '#/components/schemas/Abn'
+        governedByTrustDeed:
+          type: boolean
+          description: Indicates if there is a Turst Deed that exists and governs the Trust.
+        investingIsPrimaryActivity:
+          type: boolean
+          description: Indicates if investing is the trust’s primary activity.
+        objectiveOfTrust:
+          type: string
+          description: The objective of the Trust as per the Trust Deed.
+          minLength: 5
+          maxLength: 500
+        industryClassification:
+          $ref: '#/components/schemas/Industry_Classification'
+        registeredAddress:
+          $ref: '#/components/schemas/Address'
+        postalAddress:
+          $ref: '#/components/schemas/Address'
+        charityDetails:
+          $ref: '#/components/schemas/Charity_Detials'
+          description: Supply this object if the Trust is a charity.
+        trustees:
+          oneOf:
+            - $ref: '#/components/schemas/Company_Trustee'
+              description: The trustee is a Company.
+            - type: array
+              description: The trustee is an Individual.
+              minItems: 1
+              maxItems: 3
+              items:
+                $ref: '#/components/schemas/Individual'
+        beneficiaryDetails:
+          type: array
+          description: 'If the terms of the Trust Deed identify beneficiaries by reference to membership of a class then specify the details of the class, otherwise list the details of each Beneficiary'
+          minItems: 1
+          maxItems: 5
+          items:
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/Trust_Beneficiary_Class'
+              - $ref: '#/components/schemas/Trust_Beneficiary_Individual'
+            discriminator:
+              propertyName: entityType
+              mapping:
+                trust-beneficiary-class: '#/components/schemas/Trust_Beneficiary_Class'
+                trust-beneficiary-individual: '#/components/schemas/Trust_Beneficiary_Individual'
+        settlor:
+          type: object
+          description: Information regarding the Settlor for the Trust. This is required if `identityVerification.simplifiedTrusteeVerificationUsed` equals `false`
+          properties:
+            assetContributionIsImmaterial:
+              type: boolean
+              description: 'At the time the Trust was established, was the Settlor''s material asset contribution to the Trust less than $10,000'
+            isDeceased:
+              type: boolean
+              description: Indicates if the Settlor is now deceased
+            name:
+              $ref: '#/components/schemas/Name'
+              description: Needs to be supplied if `assetContributionIsImmaterial` and `isDeceased` are `false`
+          required:
+            - assetContributionIsImmaterial
+            - isDeceased
+        taxDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tax_Details'
+        identityVerification:
+          allOf:
+            - $ref: '#/components/schemas/Identity_Verification'
+            - type: object
+              properties:
+                simplifiedTrusteeVerificationUsed:
+                  $ref: '#/components/schemas/Simplified_Trustee_Verification'
+              required:
+                - simplifiedTrusteeVerificationUsed
+        screeningResults:
+          $ref: '#/components/schemas/Screening_Results'
+        marketingOptedOut:
+          $ref: '#/components/schemas/Marketing_Opted_Out'
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: trust
+      required:
+        - name
+        - type
+        - emailAddress
+        - establishmentLocation
+        - governedByTrustDeed
+        - investingIsPrimaryActivity
+        - industryClassification
+        - registeredAddress
+        - trustees
+        - beneficiaryDetails
+        - taxDetails
+        - identityVerification
+        - screeningResults
+        - marketingOptedOut
+        - entityType
+      x-tags:
+        - Models
+    Company_Trustee:
+      type: object
+      title: Company Trustee
+      description: Represents a Company that is the trustee of a Trust
+      properties:
+        registeredName:
+          type: string
+          description: 'The full, registered business name of the business.'
+          minLength: 4
+          maxLength: 150
+        industryClassification:
+          $ref: '#/components/schemas/Industry_Classification'
+        establishmentLocation:
+          $ref: '#/components/schemas/Establishment_Location'
+        businessDetails:
+          $ref: '#/components/schemas/Company'
+          description: The details for this Business specific to the type of business set in `businessType`.
+        identityVerification:
+          $ref: '#/components/schemas/Identity_Verification'
+        screeningResults:
+          $ref: '#/components/schemas/Screening_Results'
+        entityType:
+          type: string
+          description: Mandatory static value required to support automated code generation for polymorphism.
+          default: company-trustee
+      required:
+        - registeredName
+        - industryClassification
+        - establishmentLocation
+        - businessDetails
+        - identityVerification
+        - screeningResults
+        - entityType
+      x-tags:
+        - Models
+    Trust_Beneficiary_Class:
+      type: object
+      title: Trust Beneficiary Class
+      description: Information regarding a class based beneficiary of a trust.
+      properties:
+        type:
+          type: string
+          enum:
+            - parents
+            - grandparents
+            - siblings
+            - children
+            - grandchildren
+            - lineal-descendants
+            - aunts-uncles
+            - nieces-nephews
+            - spouse
+            - other
+          description: The type of this class beneficiary
+        otherType:
+          type: string
+          description: if `type` is `other` then please complete this field with the class type.
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: trust-beneficiary-class
+      required:
+        - type
+      x-tags:
+        - Elements
+    Trust_Beneficiary_Individual:
+      type: object
+      title: Trust Beneficiary Individual
+      description: Represents an Individual Legal Entity who has only had screening completed
+      properties:
+        isBeneficialOwner:
+          type: boolean
+          description: Indicates that this Beneficiary owns 25% or more of the Trust
+        person:
+          $ref: '#/components/schemas/Person'
+        employment:
+          type: object
+          properties:
+            category:
+              type: string
+            type:
+              type: string
+          required:
+            - category
+            - type
+        taxDetails:
+          type: array
+          minItems: 1
+          maxItems: 4
+          items:
+            $ref: '#/components/schemas/Tax_Details'
+        marketingOptedOut:
+          $ref: '#/components/schemas/Marketing_Opted_Out'
+        screeningResults:
+          $ref: '#/components/schemas/Screening_Results'
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: trust-beneficiary-individual
+      required:
+        - isBeneficialOwner
+        - employment
+        - taxDetails
+        - marketingOptedOut
+        - screeningResults
+        - entityType
+      x-tags:
+        - Models
+    Name:
+      type: object
+      title: Name
+      description: The name of a person
+      properties:
+        title:
+          $ref: '#/components/schemas/Title'
+        firstName:
+          $ref: '#/components/schemas/FirstName'
+        middleName:
+          $ref: '#/components/schemas/MiddleName'
+        lastName:
+          $ref: '#/components/schemas/LastName'
+        otherName:
+          type: string
+          description: Other name the person is known by.
+      required:
+        - title
+        - firstName
+        - lastName
+      x-tags:
+        - Elements
+    Simplified_Trustee_Verification:
+      type: boolean
+      title: Simplified Trustee Verification
+      description: Indicates if the Simplified Trustee Verification procedure was used for this Trust.
+      x-tags:
+        - Attributes
+    Trading_Product_Type:
+      const: domestic-equities
+      title: Trading Product Type
+      x-tags:
+        - Attributes
+    Direct_Entry_Account:
+      type: object
+      title: Direct Entry Account
+      properties:
+        accountName:
+          type: string
+          description: The exact name of the account as shown on the account statement
+        branchCode:
+          type: string
+          description: The code the identifies the branch that the account is held at e.g. BSB
+          pattern: '^[0-9]+$'
+        accountNumber:
+          type: string
+          description: The unique ID that identifies the account at the financial institution
+          pattern: '^[0-9]+$'
+          minLength: 6
+          maxLength: 9
+        usedForCredits:
+          type: boolean
+          description: Indicates if any credits earned on your Trading Account should be settled against this account
+        usedForDebits:
+          type: boolean
+          description: Indicates if any debits incurred on your Trading Account should be settled against this account
+        usedForDividends:
+          type: boolean
+          description: Indicates if this account should be supplied to the share registries as the destination for the electronic payment of dividends if this is enabled for the account and where the registry supports it
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: direct-entry-account
+      required:
+        - accountName
+        - branchCode
+        - accountNumber
+        - usedForCredits
+        - usedForDebits
+        - usedForDividends
+        - entityType
+      x-tags:
+        - Models
+    Direct_Entry_Account_Map:
+      type: object
+      title: Direct Entry Account Map
+      description: Wrapper object containing a map of identifiers to Direct Entry Account objects. This wrapper makes the map an explicit object so code generators produce a concrete model type.
+      properties:
+        entityType:
+          type: string
+          const: direct-entry-account
+        accounts:
+          type: object
+          description: Map of identifier -> Direct Entry Account
+          additionalProperties:
+            $ref: '#/components/schemas/Direct_Entry_Account'
+      required:
+        - entityType
+        - accounts
+      x-tags:
+        - Models
+    Cash_Management_Account:
+      type: object
+      title: Cash Management Account
+      properties:
+        institution:
+          type: object
+          description: The Financial Institution that issues this Cash Management Account.
+          properties:
+            code:
+              const: wbc
+              description: |-
+                A unique identifier or reference code associated with the entity or record.
+
+                Values | Description
+                ---|---
+                 wbc | Westpac Banking Corporation
+          required:
+            - code
+        accountName:
+          type: string
+          description: The exact name of the account as shown on the account statement
+        branchCode:
+          type: string
+          description: The code the identifies the branch that the account is held at e.g. BSB
+          pattern: '^[0-9]+$'
+        accountNumber:
+          type: string
+          description: The unique ID that identifies the account at the financial institution
+          pattern: '^[0-9]+$'
+          minLength: 6
+          maxLength: 9
+        entityType:
+          type: string
+          description: Static value used to identify the object by consumers using code generation that leverages discriminators.
+          default: cash-management-account
+      required:
+        - institution
+        - accountName
+        - branchCode
+        - accountNumber
+        - entityType
+      x-tags:
+        - Models
+    Document_Types:
+      type: string
+      enum:
+        - client-agreement
+        - digital-signature-certificate
+      title: Document Types
+      description: The valid types of documents
+      x-tags:
+        - Attributes
+    Application_Summary:
+      type: object
+      title: Application Summary
+      description: 'Indicates whether the API call was successful, or if not, contains the reasons why.'
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplicationId'
+        applicationStatus:
+          $ref: '#/components/schemas/ApplicationStatus'
+        validationStatus:
+          type: string
+          enum:
+            - valid
+            - invalid
+          description: 'The status of the application validation. If the application is invalid, you will need to correct the errors before you can submit it.'
+        errors:
+          type: array
+          description: 'If the application is invalid, this will list each validation failure.  If the application is valid, this will be empty.'
+          items:
+            $ref: '#/components/schemas/Error_Details'
+        warnings:
+          type: array
+          description: 'This will list any non-blocking validation warnings. These do not prevent submission but should be reviewed. If there are no warnings, this will be empty.'
+          items:
+            $ref: '#/components/schemas/Warning_Details'
+      required:
+        - id
+        - applicationStatus
+        - validationStatus
+      x-tags:
+        - Models
+    Error_Details:
+      type: object
+      title: Error Details
+      description: Details of a validation issue in the request.
+      properties:
+        errorCode:
+          type: string
+          description: 'The unique code that represents the type of error that has been detected.  Please refer to the [documentation](../docs/4-validation.md#error-codes) for list of possible error codes.'
+        errorDescription:
+          type: string
+          description: A plain text description of the error that has been detected.
+        attributeType:
+          type: string
+          enum:
+            - field
+            - path-parameter
+            - query-parameter
+            - header
+          description: The type of the attribute that they error has been detected in. This field is only populated if the error relates to an attribute.
+        attributeName:
+          type: string
+          description: The name of the attribute that they error has been detected in. This field is only populated if the error relates to an attribute.
+      required:
+        - errorCode
+        - errorDescription
+      x-tags:
+        - Elements
+    Warning_Details:
+      type: object
+      title: Warning Details
+      description: Details of a validation issue in the request.
+      properties:
+        warningCode:
+          type: string
+          description: 'The unique code that represents the type of warning that has been detected.  Please refer to the [documentation](../docs/4-validation.md#warning-codes) for list of possible warning codes.'
+        warningDescription:
+          type: string
+          description: A plain text description of the warning that has been detected.
+        attributeType:
+          type: string
+          enum:
+            - field
+            - path-parameter
+            - query-parameter
+            - header
+          description: The type of the attribute that they warning has been detected in. This field is only populated if the warning relates to an attribute.
+        attributeName:
+          type: string
+          description: The name of the attribute that they warning has been detected in. This field is only populated if the warning relates to an attribute.
+      required:
+        - warningCode
+        - warningDescription
+      x-tags:
+        - Elements
+    Application_Full_Details:
+      type: object
+      title: Application Full Details
+      description: 'Provides full details of an application, including the most recent validation results.'
+      properties:
+        id:
+          $ref: '#/components/schemas/ApplicationId'
+        applicationSummary:
+          $ref: '#/components/schemas/Application_Summary'
+        application:
+          $ref: '#/components/schemas/Application'
+      required:
+        - id
+        - applicationSummary
+        - application
+      x-tags:
+        - Models
